@@ -4,3 +4,10 @@ main: me.reodorfelgen.pathfinder.PathFinder
 api-version: '1.20'
 authors: [Reodor Felgen]
 description: Find your way
+commands:
+  findwayhome:
+    description: PathFinding your way back home
+    usage: /<command>
+  sethome:
+    description: setting your home
+    usage: /<command>
