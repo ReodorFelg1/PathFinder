@@ -8,11 +8,12 @@ public class AStarAlgorithm {
         PriorityQueue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         openSet.add(start);
+        start.setGCost(0);
+        start.setHCost(distance(start, end));
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
             if (current.equals(end)) {
-                System.out.println("Found path!");
                 return reconstructPath(current);
             }
 
@@ -20,14 +21,12 @@ public class AStarAlgorithm {
 
             for (Node neighbor : getNeighbors(current)) {
                 if (closedSet.contains(neighbor)) continue;
-
                 double tentativeGCost = current.getGCost() + distance(current, neighbor);
 
-                if (tentativeGCost < neighbor.getGCost() || !openSet.contains(neighbor)) {
+                if (!openSet.contains(neighbor) || tentativeGCost < neighbor.getGCost()) {
                     neighbor.setParent(current);
                     neighbor.setGCost(tentativeGCost);
-                    neighbor.sethCost(distance(neighbor, end));
-
+                    neighbor.setHCost(distance(neighbor, end));
                     if (!openSet.contains(neighbor)) {
                         openSet.add(neighbor);
                     }
@@ -35,9 +34,8 @@ public class AStarAlgorithm {
             }
         }
 
-        return Collections.emptyList(); //return empty list if no path found
+        return Collections.emptyList(); // Return an empty list if no path is found.
     }
-
 
     private List<Node> reconstructPath(Node end) {
         List<Node> path = new ArrayList<>();
@@ -52,26 +50,20 @@ public class AStarAlgorithm {
 
     private List<Node> getNeighbors(Node node) {
         List<Node> neighbors = new ArrayList<>();
-
-        // Add neighboring nodes (assuming a grid with 4 or 8 possible directions)
-        // Example for 4 directions (up, down, left, right)
-        neighbors.add(new Node(node.getX() + 1, node.getY()));
-        neighbors.add(new Node(node.getX() - 1, node.getY()));
-        neighbors.add(new Node(node.getX(), node.getY() + 1));
-        neighbors.add(new Node(node.getX(), node.getY() - 1));
-
-        // Uncomment below lines for 8 directions (including diagonals)
-        neighbors.add(new Node(node.getX() + 1, node.getY() + 1));
-        neighbors.add(new Node(node.getX() + 1, node.getY() - 1));
-        neighbors.add(new Node(node.getX() - 1, node.getY() + 1));
-        neighbors.add(new Node(node.getX() - 1, node.getY() - 1));
-
+        int[] deltas = {-1, 0, 1};
+        for (int dx : deltas) {
+            for (int dy : deltas) {
+                for (int dz : deltas) {
+                    if (dx != 0 || dy != 0 || dz != 0) { // Exclude the current node itself
+                        neighbors.add(new Node(node.getX() + dx, node.getY() + dy, node.getZ() + dz));
+                    }
+                }
+            }
+        }
         return neighbors;
     }
 
     private double distance(Node a, Node b) {
-        return Math.hypot(a.getX() - b.getX(), a.getY() - b.getY());
+        return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2) + Math.pow(a.getZ() - b.getZ(), 2));
     }
-
 }
- 

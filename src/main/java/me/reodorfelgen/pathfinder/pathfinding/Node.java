@@ -1,13 +1,14 @@
 package me.reodorfelgen.pathfinder.pathfinding;
 
 public class Node implements Comparable<Node> {
-    private final int x, y;
+    private final int x, y, z;
     private Node parent;
     private double gCost, hCost;
 
-    public Node(int x, int y) {
+    public Node(int x, int y, int z) {
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     public int getX() {
@@ -16,6 +17,10 @@ public class Node implements Comparable<Node> {
 
     public int getY() {
         return y;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     public Node getParent() {
@@ -38,7 +43,7 @@ public class Node implements Comparable<Node> {
         return hCost;
     }
 
-    public void sethCost(double hCost) {
+    public void setHCost(double hCost) {
         this.hCost = hCost;
     }
 
@@ -51,18 +56,16 @@ public class Node implements Comparable<Node> {
         return Double.compare(this.getFCost(), other.getFCost());
     }
 
-    //Checks if this node is equal to another node based on cords, True if nodes have same cords
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Node node = (Node) obj;
-        return x == node.x && y == node.y;
+        return x == node.x && y == node.y && z == node.z;
     }
 
-    //Generates a hash code based on coordinates
     @Override
     public int hashCode() {
-        return 31 * x + y;
+        return 31 * x + 31 * y + z;
     }
 }
