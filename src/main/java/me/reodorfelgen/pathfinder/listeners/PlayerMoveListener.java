@@ -20,7 +20,7 @@ public class PlayerMoveListener implements Listener {
         Player player = event.getPlayer();
         Location location = player.getLocation();
         playerLocations.put(player, location);
-        System.out.println(getPlayerLocation(player));
+        // System.out.println(getPlayerLocation(player));
     }
 
     public void deactivatePlayer(Player player) {

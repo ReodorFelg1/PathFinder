@@ -2,13 +2,9 @@ package me.reodorfelgen.pathfinder;
 
 import me.reodorfelgen.pathfinder.commands.FindWayHomeCommand;
 import me.reodorfelgen.pathfinder.commands.SetHomeCommand;
-import me.reodorfelgen.pathfinder.listeners.PlayerMoveListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static org.bukkit.Bukkit.getServer;
-
 public final class PathFinder extends JavaPlugin {
-
 
     private static PathFinder plugin;
 
@@ -22,11 +18,15 @@ public final class PathFinder extends JavaPlugin {
         // Plugin startup logic
         System.out.println("Starting up the PathFinder plugin...");
         plugin = this;
-        getCommand("findwayhome").setExecutor(new FindWayHomeCommand());
-        getCommand("sethome").setExecutor(new SetHomeCommand());
+
+        // Create a single instance of SetHomeCommand
+        SetHomeCommand setHomeCommand = new SetHomeCommand();
+
+        // Register commands using the shared instance of SetHomeCommand
+        getCommand("findwayhome").setExecutor(new FindWayHomeCommand(setHomeCommand));
+        getCommand("sethome").setExecutor(setHomeCommand);
 
         System.out.println("Pathfinder Started.");
-
     }
 
     @Override
