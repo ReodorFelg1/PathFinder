@@ -1,5 +1,6 @@
 package me.reodorfelgen.pathfinder.commands;
 
+import me.reodorfelgen.pathfinder.PathFinder;
 import me.reodorfelgen.pathfinder.pathfinding.AStarAlgorithm;
 import me.reodorfelgen.pathfinder.pathfinding.Node;
 import me.reodorfelgen.pathfinder.utils.LocationUtils;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -40,15 +42,27 @@ public class FindWayHomeCommand implements CommandExecutor {
         Node startNode = LocationUtils.locationToNode(currentLocation);
         Node endNode = LocationUtils.locationToNode(homeLocation);
 
-        AStarAlgorithm aStar = new AStarAlgorithm(player.getWorld(), player);
-        List<Node> path = aStar.findPath(startNode, endNode);
+        // Run pathfinding asynchronously
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                AStarAlgorithm aStar = new AStarAlgorithm(player.getWorld(), player);
+                List<Node> path = aStar.findPath(startNode, endNode);
 
-        if (path.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "No path found to your home.");
-        } else {
-            player.sendMessage(ChatColor.GREEN + "Path found! Visualizing...");
-            VisualizationUtils.visualizePath(player, path);
-        }
+                // Handle the result on the main server thread
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (path.isEmpty()) {
+                            player.sendMessage(ChatColor.RED + "No path found to your home.");
+                        } else {
+                            player.sendMessage(ChatColor.GREEN + "Path found! Visualizing...");
+                            VisualizationUtils.visualizePath(player, path);
+                        }
+                    }
+                }.runTask(PathFinder.getPlugin());
+            }
+        }.runTaskAsynchronously(PathFinder.getPlugin());
 
         return true;
     }

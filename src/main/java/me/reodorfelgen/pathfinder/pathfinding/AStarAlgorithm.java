@@ -29,7 +29,7 @@ public class AStarAlgorithm {
             Location currentLocation = LocationUtils.nodeToLocation(current, world);
 
             // Visualize current node processing
-            world.spawnParticle(Particle.VIBRATION, currentLocation.add(0.5, 0.5, 0.5), 5, 0.1, 0.1, 0.1, 0.02);
+            world.spawnParticle(Particle.HEART, currentLocation.add(0.5, 0.5, 0.5), 1);
             player.sendBlockChange(currentLocation, world.getBlockAt(currentLocation).getBlockData()); // Send block change to only the player
 
             if (current.equals(end)) {
