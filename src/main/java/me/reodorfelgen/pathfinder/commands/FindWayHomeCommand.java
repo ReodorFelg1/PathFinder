@@ -40,7 +40,7 @@ public class FindWayHomeCommand implements CommandExecutor {
         Node startNode = LocationUtils.locationToNode(currentLocation);
         Node endNode = LocationUtils.locationToNode(homeLocation);
 
-        AStarAlgorithm aStar = new AStarAlgorithm();
+        AStarAlgorithm aStar = new AStarAlgorithm(player.getWorld(), player);
         List<Node> path = aStar.findPath(startNode, endNode);
 
         if (path.isEmpty()) {
