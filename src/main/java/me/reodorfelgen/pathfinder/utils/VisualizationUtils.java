@@ -24,7 +24,7 @@ public class VisualizationUtils {
                 public void run() {
                     world.getBlockAt(loc).setType(originalMaterial);
                 }
-            }.runTaskLater(PathFinder.getPlugin(), 500);
+            }.runTaskLater(PathFinder.getPlugin(), 500); //25 seconds
         }
     }
 

@@ -18,6 +18,6 @@ public class LocationUtils {
 
     public static boolean isWalkable(Location location) {
         Block block = location.getWorld().getBlockAt(location);
-        return block.getType().isAir() || block.getType().equals(Material.WATER); // You can customize walkable blocks
+        return block.getType().isAir() || block.getType().equals(Material.WATER) && block.getType() != Material.LAVA; // You can customize walkable blocks
     }
 }
