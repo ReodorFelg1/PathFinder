@@ -12,7 +12,7 @@ PathFinder is a Bukkit/Spigot plugin designed to help with navigation in Minecra
 
 ### Motivation
 
-This project was initiated as a practical learning exercise to improve Java programming skills, deepen understanding of object-oriented programming principles, and explore complex algorithms in a real-world application. It serves as a hands-on project to apply theoretical knowledge in software development, specifically within the context of game plugin development.
+This project was initiated as a practical learning exercise to improve Java programming skills, deepen understanding of object-oriented programming principles, and explore algorithms in a real-world application.
 
 ### Installation
 
