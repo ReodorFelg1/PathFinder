@@ -5,12 +5,13 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
 import java.util.*;
 
 public class AStarAlgorithm {
 
     private final World world;
-    private final Player player;  // Need to pass Player object to visualize to the right player
+    private final Player player;
 
     public AStarAlgorithm(World world, Player player) {
         this.world = world;
@@ -18,6 +19,8 @@ public class AStarAlgorithm {
     }
 
     public List<Node> findPath(Node start, Node end) {
+        long startTime = System.nanoTime();  // Start timing
+
         PriorityQueue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         openSet.add(start);
@@ -30,10 +33,14 @@ public class AStarAlgorithm {
 
             // Visualize current node processing
             world.spawnParticle(Particle.HEART, currentLocation.add(0.5, 0.5, 0.5), 1);
-            player.sendBlockChange(currentLocation, world.getBlockAt(currentLocation).getBlockData()); // Send block change to only the player
+            player.sendBlockChange(currentLocation, world.getBlockAt(currentLocation).getBlockData());
 
             if (current.equals(end)) {
-                return reconstructPath(current);
+                List<Node> path = reconstructPath(current);
+                long endTime = System.nanoTime();  // End timing
+                double duration = (endTime - startTime) / 1_000_000.0;  // Convert to milliseconds
+                System.out.println("Pathfinding took " + duration + " milliseconds.");
+                return path;
             }
 
             closedSet.add(current);
@@ -52,6 +59,10 @@ public class AStarAlgorithm {
                 }
             }
         }
+
+        long endTime = System.nanoTime();  // End timing if no path found
+        double duration = (endTime - startTime) / 1_000_000.0;  // Convert to milliseconds
+        System.out.println("Pathfinding completed without finding a path in " + duration + " milliseconds.");
 
         return Collections.emptyList(); // Return an empty list if no path is found.
     }
@@ -86,6 +97,10 @@ public class AStarAlgorithm {
     }
 
     private double distance(Node a, Node b) {
-        return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2) + Math.pow(a.getZ() - b.getZ(), 2));
+        int dx = a.getX() - b.getX();
+        int dy = a.getY() - b.getY();
+        int dz = a.getZ() - b.getZ();
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
+
 }
